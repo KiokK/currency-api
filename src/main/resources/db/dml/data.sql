@@ -6,3 +6,7 @@ VALUES ('US Dollar', 'USD'),
 insert into exchange_rates(rate, initial_amount, concluding_amount, initial_id, concluding_id)
 VALUES (1.23003, 1, 1, 1, 2),
        (1.18, 1, 1, 2, 1);
+
+insert into users(username, password, role)
+values ('user', 'user', 'USER'),
+       ('admin', 'admin', 'ADMIN');
