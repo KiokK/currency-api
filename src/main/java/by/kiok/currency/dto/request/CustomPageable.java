@@ -1,6 +1,6 @@
 package by.kiok.currency.dto.request;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 
 public record CustomPageable(
 

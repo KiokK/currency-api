@@ -5,6 +5,7 @@ import by.kiok.currency.model.Currency;
 import by.kiok.currency.model.ExchangeRate;
 import by.kiok.currency.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,13 +72,21 @@ public class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
 
     @Override
     public Optional<ExchangeRate> findById(long id) {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(SELECT_BY_ID_WITH_CURRENCIES, rowMapperWithCurrency, id));
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(SELECT_BY_ID_WITH_CURRENCIES, rowMapperWithCurrency, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<ExchangeRate> findAll(CustomPageable pageable) {
-        return jdbcTemplate.query(SELECT_ALL_LIMIT_OFFSET_WITH_CURRENCIES, rowMapperWithCurrency,
-                pageable.pageSize(), pageable.getOffset());
+        try {
+            return jdbcTemplate.query(SELECT_ALL_LIMIT_OFFSET_WITH_CURRENCIES, rowMapperWithCurrency,
+                    pageable.pageSize(), pageable.getOffset());
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 }
