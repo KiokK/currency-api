@@ -16,7 +16,7 @@ public record ExchangeRateRequestDto (
         @Min(1)
         long initialCurrencyId,
 
-        @ApiModelProperty(value = "min=1", example = "1", required = true)
+        @ApiModelProperty(value = "min=1", example = "2", required = true)
         @Min(1)
         long concludingCurrencyId,
 

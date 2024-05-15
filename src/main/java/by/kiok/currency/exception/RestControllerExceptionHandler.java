@@ -2,7 +2,9 @@ package by.kiok.currency.exception;
 
 import by.kiok.currency.dto.response.ErrorResponseDto;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,9 +41,9 @@ public class RestControllerExceptionHandler {
         return new ErrorResponseDto(ex.getMessage(), ERROR_VALIDATION_CODE);
     }
 
-    @ExceptionHandler({DuplicateKeyException.class})
+    @ExceptionHandler({NonTransientDataAccessException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody ErrorResponseDto handleDuplicateKeyException(DuplicateKeyException ex) {
+    public @ResponseBody ErrorResponseDto handleNonTransientDataAccessException(NonTransientDataAccessException ex) {
         return new ErrorResponseDto(ex.getMessage(), ERROR_DUPLICATE_KEY_CODE);
     }
 }

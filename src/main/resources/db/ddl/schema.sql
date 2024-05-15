@@ -1,3 +1,4 @@
+drop table if exists users cascade;
 drop table if exists currencies cascade;
 drop table if exists exchange_rates cascade;
 
@@ -20,4 +21,12 @@ CREATE TABLE exchange_rates
     concluding_id     BIGINT        NOT NULL REFERENCES currencies (id) check (concluding_id != initial_id),
     created_at        TIMESTAMP     NOT NULL DEFAULT now(),
     modified_at       TIMESTAMP     NOT NULL DEFAULT now()
+);
+
+CREATE TABLE users
+(
+    id       BIGSERIAL PRIMARY KEY,
+    username VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(15) NOT NULL,
+    role     VARCHAR(15)
 );
