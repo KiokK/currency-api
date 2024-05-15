@@ -4,11 +4,13 @@ import by.kiok.currency.dto.request.CustomPageable;
 import by.kiok.currency.model.Currency;
 import by.kiok.currency.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +34,21 @@ public class CurrencyRepositoryImpl implements CurrencyRepository {
 
     @Override
     public Optional<Currency> findById(long id) {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(SELECT_BY_ID, new BeanPropertyRowMapper<>(Currency.class), id));
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(SELECT_BY_ID, new BeanPropertyRowMapper<>(Currency.class), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Currency> findAllOrderedByTitle(CustomPageable pageable) {
-        return jdbcTemplate.query(SELECT_ALL_LIMIT_OFFSET,
-                new BeanPropertyRowMapper<>(Currency.class), pageable.pageSize(), pageable.getOffset());
+        try {
+            return jdbcTemplate.query(SELECT_ALL_LIMIT_OFFSET,
+                    new BeanPropertyRowMapper<>(Currency.class), pageable.pageSize(), pageable.getOffset());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
     }
 }
